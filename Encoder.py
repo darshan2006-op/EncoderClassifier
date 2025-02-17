@@ -7,7 +7,7 @@ from LayerNorm import LayerNorm, PositionalFeedForwardNetwork, ResidualConnectio
 from Attention import MultiHeadAttention
 
 class EncoderLayer(nn.Module):
-    def __init__(self, num_heads, d_model):
+    def __init__(self, num_heads, d_model, dff):
         super().__init__()
         self.num_heads = num_heads
         self.dmodel = d_model   
@@ -17,7 +17,7 @@ class EncoderLayer(nn.Module):
         self.res1 = ResidualConnection()
         self.res2 = ResidualConnection()
 
-        self.pwff = PositionalFeedForwardNetwork(d_model, 2 * d_model)
+        self.pwff = PositionalFeedForwardNetwork(d_model, dff)
 
     def forward(self, x):
         res = x
@@ -31,9 +31,9 @@ class EncoderLayer(nn.Module):
         return x
     
 class Encoder(nn.Module):
-    def __init__(self, vocab_size, num_head, d_model, num_layers, device):
+    def __init__(self, vocab_size, num_head, d_model, num_layers, dff, device):
         super().__init__()
-        self.layers = nn.Sequential(*[EncoderLayer(num_head, d_model) for _ in range(num_layers)])
+        self.layers = nn.Sequential(*[EncoderLayer(num_head, d_model, dff) for _ in range(num_layers)])
         self.embedder = Embedder(vocab_size, d_model)
         self.position_encoder = PositionEncoder(device)
 

@@ -4,10 +4,10 @@ import torch.nn.functional as F
 from Encoder import Encoder
 
 class Classifier(nn.Module):
-    def __init__(self, vocab_size, d_model, num_heads, num_layers, num_classes=1, device="cuda"):
+    def __init__(self, vocab_size, d_model, num_heads, num_layers, dff, num_classes=1, device="cuda"):
         super().__init__()
-        self.encoder = Encoder(vocab_size, num_heads, d_model, num_layers, device)
-        self.layers = nn.Sequential(nn.Linear(d_model, num_classes), nn.Softmax())
+        self.encoder = Encoder(vocab_size, num_heads, d_model,num_layers, dff, device)
+        self.layers = nn.Sequential(nn.Linear(d_model, num_classes), nn.Sigmoid())
 
     def forward(self, x):
         x = self.encoder(x)
